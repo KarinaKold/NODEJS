@@ -4,11 +4,11 @@
 /*-----------------------------*/
 
 const yargs = require("yargs");
-
 const pkg = require("./package.json");
 yargs.version(pkg.version);
 
-const { addNote, getNotes } = require("./notes.controller");
+// const { addNote, getNotes } = require("./notes.controller");
+const { addNote, printNotes } = require("./notes.controller");
 
 yargs.command({
   command: "add",
@@ -31,8 +31,10 @@ yargs.command({
   describe: "Print all notes",
   async handler() {
     // console.log("List command");
-    const notes = await getNotes();
-    console.log(notes);
+
+    // const notes = await getNotes();
+    // console.log(notes);
+    printNotes();
   },
 });
 
