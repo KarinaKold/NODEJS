@@ -1,5 +1,7 @@
-// node index add --title=Hello
-// node index list
+// Команды:
+// index add --title=<title> Add new note to list
+// index remove --id=<id>    Remove note by id
+// index list                Print all notes
 
 /*-----------------------------*/
 
@@ -7,8 +9,7 @@ const yargs = require("yargs");
 const pkg = require("./package.json");
 yargs.version(pkg.version);
 
-// const { addNote, getNotes } = require("./notes.controller");
-const { addNote, printNotes } = require("./notes.controller");
+const { addNote, removeNote, printNotes } = require("./notes.controller");
 
 yargs.command({
   command: "add",
@@ -21,8 +22,22 @@ yargs.command({
     },
   },
   handler({ title }) {
-    // console.log("Add command", title);
     addNote(title);
+  },
+});
+
+yargs.command({
+  command: "remove",
+  describe: "Remove note by id",
+  builder: {
+    id: {
+      type: "string",
+      describe: "Note id",
+      demandOption: true,
+    },
+  },
+  handler({ id }) {
+    removeNote(id);
   },
 });
 
@@ -30,10 +45,6 @@ yargs.command({
   command: "list",
   describe: "Print all notes",
   async handler() {
-    // console.log("List command");
-
-    // const notes = await getNotes();
-    // console.log(notes);
     printNotes();
   },
 });
