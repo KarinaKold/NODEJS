@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/KarinaKold/NODEJS#readme",
   "dependencies": {
+    "@types/yargs": "^17.0.35",
     "yargs": "^17.7.2"
   }
 }
