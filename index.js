@@ -1,52 +1,45 @@
-// Команды:
-// index add --title=<title> Add new note to list
-// index remove --id=<id>    Remove note by id
-// index list                Print all notes
-
-/*-----------------------------*/
-
-const yargs = require("yargs");
-const pkg = require("./package.json");
-yargs.version(pkg.version);
-
 const { addNote, removeNote, printNotes } = require("./notes.controller");
 
-yargs.command({
-  command: "add",
-  describe: "Add new note to list",
-  builder: {
-    title: {
-      type: "string",
-      describe: "Note title",
-      demandOption: true,
-    },
-  },
-  handler({ title }) {
-    addNote(title);
-  },
+const http = require("http");
+const chalk = require("chalk");
+const fs = require("fs/promises");
+const path = require("path");
+const { title } = require("process");
+
+const port = 3000;
+const basepath = path.join((__dirname, "pages"));
+
+const server = http.createServer(async (req, res) => {
+  if (req.method === "GET") {
+    const content = await fs.readFile(path.join(basepath, "index.html"));
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(content);
+  } else if (req.method === "POST") {
+    const body = [];
+    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+
+    req.on("data", (data) => {
+      body.push(Buffer.from(data));
+      // console.log(data); // buffer
+    });
+
+    req.on("end", () => {
+      // console.log("End", body.toString().split("=")[1].replaceAll("+", " "));
+      const title = body.toString().split("=")[1].replaceAll("+", " ");
+      addNote(title);
+    });
+
+    // res.end("Post success");
+    res.end(`Title = ${title}`);
+  }
+
+  // console.log("Server!");
+  // console.log("method", req.method);
+  // console.log("url", req.url);
+
+  // res.end("Hello from server!");
 });
 
-yargs.command({
-  command: "remove",
-  describe: "Remove note by id",
-  builder: {
-    id: {
-      type: "string",
-      describe: "Note id",
-      demandOption: true,
-    },
-  },
-  handler({ id }) {
-    removeNote(id);
-  },
+server.listen(port, () => {
+  console.log(chalk.green(`Server has been started on port ${port}...`));
 });
-
-yargs.command({
-  command: "list",
-  describe: "Print all notes",
-  async handler() {
-    printNotes();
-  },
-});
-
-yargs.parse();

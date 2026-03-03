@@ -4,6 +4,8 @@
   "description": "This is simple NodeJS App",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "serve": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,8 +19,11 @@
   },
   "homepage": "https://github.com/KarinaKold/NODEJS#readme",
   "dependencies": {
-    "@types/yargs": "^17.0.35",
     "chalk": "^4.1.2",
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/yargs": "^17.0.35",
+    "nodemon": "^3.1.14"
   }
 }
