@@ -1,45 +1,25 @@
-const { addNote, removeNote, printNotes } = require("./notes.controller");
-
-const http = require("http");
+// const http = require("http");
+const express = require("express");
 const chalk = require("chalk");
-const fs = require("fs/promises");
+// const fs = require("fs/promises");
 const path = require("path");
-const { title } = require("process");
+const { addNote } = require("./notes.controller");
 
 const port = 3000;
-const basepath = path.join((__dirname, "pages"));
+// const basepath = path.join((__dirname, "pages"));
+const app = express();
 
-const server = http.createServer(async (req, res) => {
-  if (req.method === "GET") {
-    const content = await fs.readFile(path.join(basepath, "index.html"));
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.end(content);
-  } else if (req.method === "POST") {
-    const body = [];
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+app.use(express.urlencoded({ extended: true }));
 
-    req.on("data", (data) => {
-      body.push(Buffer.from(data));
-      // console.log(data); // buffer
-    });
-
-    req.on("end", () => {
-      // console.log("End", body.toString().split("=")[1].replaceAll("+", " "));
-      const title = body.toString().split("=")[1].replaceAll("+", " ");
-      addNote(title);
-    });
-
-    // res.end("Post success");
-    res.end(`Title = ${title}`);
-  }
-
-  // console.log("Server!");
-  // console.log("method", req.method);
-  // console.log("url", req.url);
-
-  // res.end("Hello from server!");
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "pages", "index.html"));
 });
 
-server.listen(port, () => {
+app.post("/", (req, res) => {
+  addNote(req.body.title);
+  res.sendFile(path.join(__dirname, "pages", "index.html"));
+});
+
+app.listen(port, () => {
   console.log(chalk.green(`Server has been started on port ${port}...`));
 });
