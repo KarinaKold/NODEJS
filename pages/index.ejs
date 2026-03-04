@@ -9,17 +9,40 @@
       integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
       crossorigin="anonymous"
     />
-    <title>Node Simple Server</title>
+    <title><%= title %></title>
   </head>
   <body>
+
+    <% if (created) { %>
+      <div class="alert alert-success">
+        Note has been created!
+      </div>
+    <% } %>
+
     <div class="container">
-      <h1>This is working</h1>
+      <h1><%= title %></h1>
       <form class="mb-2" action="/" method="post">
         <div class="form-group mb-2">
           <input class="form-control" type="text" name="title" required />
         </div>
         <button class="btn btn-primary" type="submit">Create</button>
       </form>
+
+      <% if (notes.length) { %>
+      <div class="card">
+        <ul class="list-group">
+          <% for (let i = 0; i < notes.length; i++) { %>
+          <li class="list-group-item d-flex justify-content-between text-align-center">
+            <%= notes[i].title %>
+            <button class="btn btn-danger" data-type="remove" data-id="<%= notes[i].id %>">&times;</button>
+          </li>
+          <% } %>
+        </ul>
+      </div>
+      <% } else { %>
+        <p>No notes!</p>
+      <% } %>
     </div>
+    <script src="/app.js"></script>
   </body>
 </html>
