@@ -14,7 +14,8 @@ document.addEventListener("click", (event) => {
 
     if (promptTitle) {
       edit(id, promptTitle).then(() => {
-        document.querySelector("li").textContent = promptTitle;
+        event.target.dataset.title = promptTitle;
+        event.target.closest("li").firstChild.textContent = promptTitle;
       });
     }
   }
